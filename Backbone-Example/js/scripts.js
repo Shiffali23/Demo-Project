@@ -38,7 +38,7 @@ var BlogView = Backbone.View.extend({
 	model: new Blog(),
 	tagName: 'tr',
 	initialize: function() {
-		this.template = _.template($('.blogs-list-template').html());
+		this.template = Handlebars.compile( $(".blogs-list-template").html() );
 	},
 	events: {
 		'click .edit-blog': 'edit',
