@@ -26,6 +26,7 @@ var blog2 = new Blog({
 	url: 'url'
 });
 
+var updateBlog;
 var Blogs = Backbone.Collection.extend({});
 
 // instantiate a Collection
@@ -49,14 +50,15 @@ var BlogView = Backbone.View.extend({
 		$('.delete-blog').hide();
 		this.$('.update-blog').show();
 		this.$('.cancel').show();
+		updateBlog = new Blog({
+			author: this.$('.author').html(),
+			title: this.$('.title').html(),
+			url: this.$('.url').html()
+		});
 
-		var author = this.$('.author').html();
-		var title = this.$('.title').html();
-		var url = this.$('.url').html();
-
-		this.$('.author').html('<input type="text" class="form-control author-update" value="' + author + '">');
-		this.$('.title').html('<input type="text" class="form-control title-update" value="' + title + '">');
-		this.$('.url').html('<input type="text" class="form-control url-update" value="' + url + '">');
+		this.$('.author').html('<input type="text" class="form-control author-update" value="' + updateBlog.get('author') + '">');
+		this.$('.title').html('<input type="text" class="form-control title-update" value="' + updateBlog.get('title') + '">');
+		this.$('.url').html('<input type="text" class="form-control url-update" value="' + updateBlog.get('url') + '">');
 	},
 	cancel: function() {
 		blogsView.render();
@@ -75,6 +77,8 @@ var BlogsView = Backbone.View.extend({
 	initialize: function() {
 		var self = this;
 		this.model.on('add', this.render, this);
+		this.model.on('remove', this.render, this);
+		this.model.on('change', this.render, this);
 	},
 	render: function() {
 		var self = this;
@@ -99,5 +103,15 @@ $(document).ready(function() {
 		$('.title-input').val('');
 		$('.url-input').val('');
 		blogs.add(blog);
+	});
+	$(document).on('click','.delete-blog', function() {
+		blogs.where({title: $(this).closest('tr').find('span.title').html(),url:$(this).closest('tr').find('span.url').html()})[0].destroy();
+	});
+	$(document).on('click','.update-blog', function() {
+		blogs.where({title:updateBlog.get('title'),url:updateBlog.get('url')})[0].set({title: $('.title-update').val(),url:$('.url-update').val(),author:$('.author-update').val()});
+		$('.edit-blog').show();
+		$('.delete-blog').show();
+		$('.update-blog').hide();
+		$('.cancel').hide();
 	});
 })
