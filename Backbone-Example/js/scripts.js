@@ -104,14 +104,5 @@ $(document).ready(function() {
 		$('.url-input').val('');
 		blogs.add(blog);
 	});
-	$(document).on('click','.delete-blog', function() {
-		blogs.where({title: $(this).closest('tr').find('span.title').html(),url:$(this).closest('tr').find('span.url').html()})[0].destroy();
-	});
-	$(document).on('click','.update-blog', function() {
-		blogs.where({title:updateBlog.get('title'),url:updateBlog.get('url')})[0].set({title: $('.title-update').val(),url:$('.url-update').val(),author:$('.author-update').val()});
-		$('.edit-blog').show();
-		$('.delete-blog').show();
-		$('.update-blog').hide();
-		$('.cancel').hide();
-	});
+	
 })
